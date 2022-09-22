@@ -94,7 +94,7 @@ window.onload = function() {
     });
   }
 
-  // 初期ロード時にスマホの縦・横・以外でオブジェクトの大きさと配置を変える
+  // 初期ロード時にスマホの縦・横・pcでオブジェクトの大きさと配置を変える
   function initSpot() {
     
     // 画面の向きを取得
@@ -197,91 +197,81 @@ window.addEventListener('resize', function() {
     }
 
     // スマホ画面縦持ち
-    if (windowWidth <= 767 && angle === 0) {
+    if (windowWidth <= 767 && angle === 0 && deviceType !== 'portrait') {
 
-      if (deviceType !== 'portrait') {
+      infospot.scale.x /= 2;
+      infospot2.scale.x /= 2;
+      infospot3.scale.x /= 2;
+      infospot4.scale.x /= 2;
+      infospot5.scale.x /= 2;
+      titlespot.scale.x /= 2;
+      
+      infospot.scale.y /= 2;
+      infospot2.scale.y /= 2;
+      infospot3.scale.y /= 2;
+      infospot4.scale.y /= 2;
+      infospot5.scale.y /= 2;
+      titlespot.scale.y /= 2;
 
-        infospot.scale.x /= 2;
-        infospot2.scale.x /= 2;
-        infospot3.scale.x /= 2;
-        infospot4.scale.x /= 2;
-        infospot5.scale.x /= 2;
-        titlespot.scale.x /= 2;
-        
-        infospot.scale.y /= 2;
-        infospot2.scale.y /= 2;
-        infospot3.scale.y /= 2;
-        infospot4.scale.y /= 2;
-        infospot5.scale.y /= 2;
-        titlespot.scale.y /= 2;
+      infospot.position.set(750, 500, -5000);
+      infospot2.position.set(-750, 500, -5000);
+      infospot3.position.set(750, -1500, -5000);
+      infospot4.position.set(-750, -1500, -5000);
+      infospot5.position.set(-100, -500, -5000);
+      titlespot.position.set(-100, 2200, -5000);
 
-        infospot.position.set(750, 500, -5000);
-        infospot2.position.set(-750, 500, -5000);
-        infospot3.position.set(750, -1500, -5000);
-        infospot4.position.set(-750, -1500, -5000);
-        infospot5.position.set(-100, -500, -5000);
-        titlespot.position.set(-100, 2200, -5000);
+      deviceType = 'portrait';
 
-        deviceType = 'portrait';
-      }
-
-    } else if (windowWidth <= 767 && angle !== 0) {
+    } else if (windowWidth <= 767 && angle !== 0 && deviceType === 'portrait') {
 
       // スマホ画面横持ち
+      infospot.scale.x *= 2;
+      infospot2.scale.x *= 2;
+      infospot3.scale.x *= 2;
+      infospot4.scale.x *= 2;
+      infospot5.scale.x *= 2;
+      titlespot.scale.x *= 2;
+      
+      infospot.scale.y *= 2;
+      infospot2.scale.y *= 2;
+      infospot3.scale.y *= 2;
+      infospot4.scale.y *= 2;
+      infospot5.scale.y *= 2;
+      titlespot.scale.y *= 2;
 
-      if (deviceType === 'portrait') {
+      infospot.position.set(1500, 500, -5000);
+      infospot2.position.set(-2000, 500, -5000);
+      infospot3.position.set(1500, -1500, -5000);
+      infospot4.position.set(-2000, -1500, -5000);
+      infospot5.position.set(-100, -500, -5000);
+      titlespot.position.set(-100, 2200, -5000);
 
-        infospot.scale.x *= 2;
-        infospot2.scale.x *= 2;
-        infospot3.scale.x *= 2;
-        infospot4.scale.x *= 2;
-        infospot5.scale.x *= 2;
-        titlespot.scale.x *= 2;
-        
-        infospot.scale.y *= 2;
-        infospot2.scale.y *= 2;
-        infospot3.scale.y *= 2;
-        infospot4.scale.y *= 2;
-        infospot5.scale.y *= 2;
-        titlespot.scale.y *= 2;
+      deviceType = 'landscape';
+    } else if (deviceType === 'portrait') {
 
-        infospot.position.set(1500, 500, -5000);
-        infospot2.position.set(-2000, 500, -5000);
-        infospot3.position.set(1500, -1500, -5000);
-        infospot4.position.set(-2000, -1500, -5000);
-        infospot5.position.set(-100, -500, -5000);
-        titlespot.position.set(-100, 2200, -5000);
+      // pc
+      infospot.scale.x *= 2;
+      infospot2.scale.x *= 2;
+      infospot3.scale.x *= 2;
+      infospot4.scale.x *= 2;
+      infospot5.scale.x *= 2;
+      titlespot.scale.x *= 2;
+      
+      infospot.scale.y *= 2;
+      infospot2.scale.y *= 2;
+      infospot3.scale.y *= 2;
+      infospot4.scale.y *= 2;
+      infospot5.scale.y *= 2;
+      titlespot.scale.y *= 2;
 
-        deviceType = 'landscape';
-      }
-    } else {
+      infospot.position.set(1500, 500, -5000);
+      infospot2.position.set(-2000, 500, -5000);
+      infospot3.position.set(1500, -1500, -5000);
+      infospot4.position.set(-2000, -1500, -5000);
+      infospot5.position.set(-100, -500, -5000);
+      titlespot.position.set(-100, 2200, -5000);
 
-      if (deviceType === 'portrait') {
-
-
-       infospot.scale.x *= 2;
-        infospot2.scale.x *= 2;
-        infospot3.scale.x *= 2;
-        infospot4.scale.x *= 2;
-        infospot5.scale.x *= 2;
-        titlespot.scale.x *= 2;
-        
-        infospot.scale.y *= 2;
-        infospot2.scale.y *= 2;
-        infospot3.scale.y *= 2;
-        infospot4.scale.y *= 2;
-        infospot5.scale.y *= 2;
-        titlespot.scale.y *= 2;
-
-        infospot.position.set(1500, 500, -5000);
-        infospot2.position.set(-2000, 500, -5000);
-        infospot3.position.set(1500, -1500, -5000);
-        infospot4.position.set(-2000, -1500, -5000);
-        infospot5.position.set(-100, -500, -5000);
-        titlespot.position.set(-100, 2200, -5000);
-
-        deviceType = 'pc'; 
-      }
+      deviceType = 'pc'; 
       
     }
   }, 10);
