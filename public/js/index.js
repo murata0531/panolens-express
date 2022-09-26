@@ -124,10 +124,10 @@ window.onload = function() {
       // {x: -100, y: -500, z: -5000 } => 自分の目の前に配置
       infospot.position.set(750, 500, -5000);
       infospot2.position.set(-750, 500, -5000);
-      infospot3.position.set(750, -1500, -5000);
-      infospot4.position.set(-750, -1500, -5000);
+      infospot3.position.set(750, -1000, -5000);
+      infospot4.position.set(-750, -1000, -5000);
       infospot5.position.set(-100, -500, -5000);
-      titlespot.position.set(-100, 2200, -5000);
+      titlespot.position.set(-100, 1500, -5000);
 
       deviceType = 'portrait';
 
@@ -215,10 +215,10 @@ window.addEventListener('resize', function() {
 
       infospot.position.set(750, 500, -5000);
       infospot2.position.set(-750, 500, -5000);
-      infospot3.position.set(750, -1500, -5000);
-      infospot4.position.set(-750, -1500, -5000);
+      infospot3.position.set(750, -1000, -5000);
+      infospot4.position.set(-750, -1000, -5000);
       infospot5.position.set(-100, -500, -5000);
-      titlespot.position.set(-100, 2200, -5000);
+      titlespot.position.set(-100, 1500, -5000);
 
       deviceType = 'portrait';
 
