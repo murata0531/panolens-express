@@ -8,12 +8,13 @@ let spotList = [];
 
 // パノラマを変更するボタンやタイトルなどのテストデータ。本番ではredisなどのjsonとして管理する
 spotList.push({ "id": 1, "infospot": null, imgSrc: '../chartest.png', spScale: 750, pcScale: 1500, spPosition: '{750, 500, -5000}', pcPosition: '{1500, 500, -5000}' });
-spotList.push({ "id": 2, "infospot2": null, imgSrc: '../chartest2.png', spScale: 750, pcScale: 1500, spPosition: '{-750, 500, -5000}', pcPosition: '{-2000, 500, -5000}' });
-spotList.push({ "id": 3, "infospot3": null, imgSrc: '../chartest3.png', spScale: 750, pcScale: 1500, spPosition: '{750, -1000, -5000}', pcPosition: '{1500, -1500, -5000}' });
-spotList.push({ "id": 4, "infospot4": null, imgSrc: '../chartest4.png', spScale: 750, pcScale: 1500, spPosition: '{-750, -1000, -5000}', pcPosition: '{-2000, -1500, -5000}' });
-spotList.push({ "id": 5, "infospot5": null, imgSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{-100, -500, -5000}', pcPosition: '{-100, -500, -5000}' });
-spotList.push({ "id": 6, "titlespot": null, imgSrc: '../testtitle.png', spScale: 400, pcScale: 800, spPosition: '{-100, 1500, -5000}', pcPosition: '{-100, 2200, -5000}' });
+spotList.push({ "id": 2, "infospot": null, imgSrc: '../chartest2.png', spScale: 750, pcScale: 1500, spPosition: '{-750, 500, -5000}', pcPosition: '{-2000, 500, -5000}' });
+spotList.push({ "id": 3, "infospot": null, imgSrc: '../chartest3.png', spScale: 750, pcScale: 1500, spPosition: '{750, -1000, -5000}', pcPosition: '{1500, -1500, -5000}' });
+spotList.push({ "id": 4, "infospot": null, imgSrc: '../chartest4.png', spScale: 750, pcScale: 1500, spPosition: '{-750, -1000, -5000}', pcPosition: '{-2000, -1500, -5000}' });
+spotList.push({ "id": 5, "infospot": null, imgSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{-100, -500, -5000}', pcPosition: '{-100, -500, -5000}' });
+spotList.push({ "id": 6, "infospot": null, imgSrc: '../testtitle.png', spScale: 400, pcScale: 800, spPosition: '{-100, 1500, -5000}', pcPosition: '{-100, 2200, -5000}' });
 
+console.log(spotList);
 // ユーザが動画停止ボタンを押したかモーダル表示で停止されたかを判別
 let userPaused = true;
 
@@ -118,6 +119,9 @@ window.onload = function() {
     // スマホ画面縦持ち
     if (windowWidth <= 767 && angle === 0) {
 
+      spotList.map(function (spot) {
+        console.log(spot);
+      });
       // パノラマを変更するボタン
       infospot = new PANOLENS.Infospot(750, '../chartest.png');
       infospot2 = new PANOLENS.Infospot(750, '../chartest2.png');
