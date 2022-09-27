@@ -4,6 +4,16 @@ let viewer, container;
 let isModalOpen = false;
 let deviceType;
 
+let spotList = [];
+
+// パノラマを変更するボタンやタイトルなどのテストデータ。本番ではredisなどのjsonとして管理する
+spotList.push({ "id": 1, "infospot": null, imgSrc: '../chartest.png', spScale: 750, pcScale: 1500, spPosition: '{750, 500, -5000}', pcPosition: '{1500, 500, -5000}' });
+spotList.push({ "id": 2, "infospot2": null, imgSrc: '../chartest2.png', spScale: 750, pcScale: 1500, spPosition: '{-750, 500, -5000}', pcPosition: '{-2000, 500, -5000}' });
+spotList.push({ "id": 3, "infospot3": null, imgSrc: '../chartest3.png', spScale: 750, pcScale: 1500, spPosition: '{750, -1000, -5000}', pcPosition: '{1500, -1500, -5000}' });
+spotList.push({ "id": 4, "infospot4": null, imgSrc: '../chartest4.png', spScale: 750, pcScale: 1500, spPosition: '{-750, -1000, -5000}', pcPosition: '{-2000, -1500, -5000}' });
+spotList.push({ "id": 5, "infospot5": null, imgSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{-100, -500, -5000}', pcPosition: '{-100, -500, -5000}' });
+spotList.push({ "id": 6, "titlespot": null, imgSrc: '../testtitle.png', spScale: 400, pcScale: 800, spPosition: '{-100, 1500, -5000}', pcPosition: '{-100, 2200, -5000}' });
+
 // ユーザが動画停止ボタンを押したかモーダル表示で停止されたかを判別
 let userPaused = true;
 
