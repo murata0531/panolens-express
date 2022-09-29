@@ -28,42 +28,39 @@ window.onload = function() {
   const dialog = document.querySelector("#modalDialog");
 
   // 現在のパノラマ
-  panorama  = new PANOLENS.VideoPanorama('../test.mp4', { 
-    autoplay: true,
-    muted: true,
-    playsinline: true
-  });
+  // panorama  = new PANOLENS.VideoPanorama('../test.mp4', { 
+  //   autoplay: true,
+  //   muted: true,
+  //   playsinline: true
+  // });
 
   initSpot();
 
-  document.getElementById('closeModal').addEventListener('click', function() {
-    dialog['close']();
-    isModalOpen = false;
-    if (userPaused !== true) { panorama.playVideo(); }
-    panorama.toggleInfospotVisibility(true);
-  });
+  // document.getElementById('closeModal').addEventListener('click', function() {
+  //   dialog['close']();
+  //   isModalOpen = false;
+  //   if (userPaused !== true) { panorama.playVideo(); }
+  //   panorama.toggleInfospotVisibility(true);
+  // });
   
   // ビデオの再生位置が5秒以上60秒以内ならボタンやタイトルテキストなどのオブジェクトを表示
-  timeAction(panorama);
-  function timeAction(panorama, spot) {
+  function timeAction(panorama, spotList) {
     panoramaVideo = panorama.getVideoElement();
 
     panoramaVideo.addEventListener("timeupdate", function() {
       if (panoramaVideo.currentTime >= 5 && panoramaVideo.currentTime <= 60 && isModalOpen === false) {
-        panorama.add(infospot, infospot2, infospot3, infospot4, titlespot);
 
-        infospot.show();
-        infospot2.show();
-        infospot3.show();
-        infospot4.show();
-        titlespot.show();
+        spotList.map(function(spot) {
+          const infospot = spot.infospot;
+          panorama.add(infospot);
+          infospot.show();
+        });
       } else {
-        panorama.remove(infospot, infospot2, infospot3, infospot4, titlespot);
-        infospot.hide();
-        infospot2.hide();
-        infospot3.hide();
-        infospot4.hide();
-        titlespot.hide();
+        spotList.map(function(spot) {
+          const infospot = spot.infospot;
+          panorama.remove(infospot);
+          infospot.hide();
+        });
       }
     });
   }
@@ -113,7 +110,8 @@ window.onload = function() {
             }
           )
 
-          viewer.setPanorama(nextPanorama.panorama);
+          console.log(nextPanorama);
+          viewer.setPanorama(nextPanorama[0]['panorama']);
 
           const nextSpot = $.grep(spotList,
             function (obj, index) {
@@ -124,7 +122,7 @@ window.onload = function() {
             }
           )
 
-          currentPanorama = nextPanorama.panorama;
+          currentPanorama = nextPanorama[0]['id'];
           timeAction(currentPanorama, nextSpot);
         });
       } else if (spot.type === 'information') {
@@ -141,19 +139,30 @@ window.onload = function() {
       }
     });
 
+    //ビデオとオブジェクトを配置
+    viewer = new PANOLENS.Viewer({ container: container });
+
     // 一番初めのパノラマオブジェクトを現在のパノラマに設定
     const firstPanorama = panoramaList[0];
     currentPanorama = firstPanorama['panorama'];
 
-    const nextPanorama = $.grep(panoramaList,
+    const firstSpot = $.grep(spotList,
       function (obj, index) {
-        return (obj.id === spot.nextPanoramaId);
+        if (obj.panoramaId === firstPanorama['id']) {
+          currentPanorama.add(obj.infospot);
+          return obj;
+        }
       }
     )
-    //ビデオとオブジェクトを配置
-    viewer = new PANOLENS.Viewer({ container: container });
-    panorama.add(infospot5);
-    viewer.add(panorama, panorama2, panorama3, panorama4, panorama5);
+
+    $.grep(panoramaList,
+      function (obj, index) {
+        viewer.add(obj.panorama);
+      }
+    )
+
+    timeAction(currentPanorama, firstSpot);
+    
   }
 }
 
