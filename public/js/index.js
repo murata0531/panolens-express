@@ -15,7 +15,7 @@ spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, info
 spotList.push({ id: 6, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: '../testtitle.png', panoramaSrc: null, spScale: 400, pcScale: 800, spPosition: '{"x":-100, "y":1500, "z":-5000}', pcPosition: '{"x":-100, "y":2200, "z":-5000}', type: 'title', isHover: false });
 
 let panoramaList = [];
-panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4' });
+panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4', startTime: 5, endTime: 60 });
 panoramaList.push({ id: 2, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 panoramaList.push({ id: 3, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 panoramaList.push({ id: 4, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
@@ -32,26 +32,30 @@ window.onload = function() {
   document.getElementById('closeModal').addEventListener('click', function() {
     dialog['close']();
     isModalOpen = false;
-    if (userPaused !== true) { currentPanorama.playVideo(); }
-    currentPanorama.toggleInfospotVisibility(true);
+    if (userPaused !== true) { currentPanorama['panorama'].playVideo(); }
+    currentPanorama['panorama'].toggleInfospotVisibility(true);
   });
   
   // ビデオの再生位置が5秒以上60秒以内ならボタンやタイトルテキストなどのオブジェクトを表示
   function timeAction(panorama, spotList) {
-    panoramaVideo = panorama.getVideoElement();
+
+    const panoramaObj = panorama['panorama'];
+    const startTime = Number(panorama['startTime']);
+    const endTime = Number(panorama['endTime']);
+    panoramaVideo = panoramaObj.getVideoElement();
 
     panoramaVideo.addEventListener("timeupdate", function() {
-      if (panoramaVideo.currentTime >= 5 && panoramaVideo.currentTime <= 60 && isModalOpen === false) {
+      if (panoramaVideo.currentTime >= startTime && panoramaVideo.currentTime <= endTime && isModalOpen === false) {
 
         spotList.map(function(spot) {
           const infospot = spot.infospot;
-          panorama.add(infospot);
+          panoramaObj.add(infospot);
           infospot.show();
         });
       } else {
         spotList.map(function(spot) {
           const infospot = spot.infospot;
-          panorama.remove(infospot);
+          panoramaObj.remove(infospot);
           infospot.hide();
         });
       }
@@ -107,26 +111,27 @@ window.onload = function() {
           const nextSpot = $.grep(spotList,
             function (obj, index) {
               if (obj.panoramaId === spot.nextPanoramaId) {
-                console.log(spot);
                 nextPanorama[0]['panorama'].add(obj.infospot);
                 return obj;
               }
             }
           )
 
-          currentPanorama = nextPanorama[0]['panorama'];
-          timeAction(currentPanorama, nextSpot);
+          currentPanorama = nextPanorama[0];
+
+          if (currentPanorama['type'] === 'video') {
+            timeAction(currentPanorama, nextSpot);
+          }
         });
       } else if (spot.type === 'information') {
 
-        // モーダルの表示・非表示時
+        // モーダルの表示
         // モーダル表示時には動画を停止
         spot.infospot.addEventListener('click', function() {
-          console.log(currentPanorama);
-          currentPanorama.toggleInfospotVisibility(false);
+          currentPanorama['panorama'].toggleInfospotVisibility(false);
           isModalOpen = true;
-          userPaused = currentPanorama.isVideoPaused();
-          currentPanorama.pauseVideo();
+          userPaused = currentPanorama['panorama'].isVideoPaused();
+          currentPanorama['panorama'].pauseVideo();
           dialog['show']();
         });
       }
@@ -136,13 +141,12 @@ window.onload = function() {
     viewer = new PANOLENS.Viewer({ container: container });
 
     // 一番初めのパノラマオブジェクトを現在のパノラマに設定
-    const firstPanorama = panoramaList[0];
-    currentPanorama = firstPanorama['panorama'];
+    currentPanorama = panoramaList[0];
 
     const firstSpot = $.grep(spotList,
       function (obj, index) {
-        if (obj.panoramaId === firstPanorama['id']) {
-          currentPanorama.add(obj.infospot);
+        if (obj.panoramaId === currentPanorama['id']) {
+          currentPanorama['panorama'].add(obj.infospot);
           return obj;
         }
       }
