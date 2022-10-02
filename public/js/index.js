@@ -29,8 +29,9 @@ window.onload = function() {
 
   initSpot();
 
-  document.getElementById('closeModal').addEventListener('click', function() {
-    dialog['close']();
+  $('#closeModal , #modalBg').click(function()　{
+    // dialog['close']();
+    $('#modalArea').fadeOut();
     isModalOpen = false;
     if (userPaused !== true) { currentPanorama['panorama'].playVideo(); }
     currentPanorama['panorama'].toggleInfospotVisibility(true);
@@ -132,7 +133,8 @@ window.onload = function() {
           isModalOpen = true;
           userPaused = currentPanorama['panorama'].isVideoPaused();
           currentPanorama['panorama'].pauseVideo();
-          dialog['show']();
+          // dialog['show']();
+          $('#modalArea').fadeIn();
         });
       }
     });
