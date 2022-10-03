@@ -68,7 +68,6 @@ window.onload = function() {
     
     // 画面の向きを取得
     let angle = screen && screen.orientation && screen.orientation.angle;
-    let windowWidth = $(window).width();
 
     if ( angle === undefined ) {
       angle = window.orientation; // iOS用
@@ -86,8 +85,8 @@ window.onload = function() {
     //パノラマ上に配置するオブジェクト
     spotList.map(function (spot) {
 
-      // スマホ画面縦持ち
-      if (windowWidth <= 767 && angle === 0) {
+      // スマホ、タブレット画面縦持ち
+      if (angle === 0) {
         spot.infospot = new PANOLENS.Infospot(spot.spScale, spot.infoSrc, spot.isHover);
         const spPosition = JSON.parse(spot.spPosition);
         spot.infospot.position.set(spPosition.x, spPosition.y, spPosition.z);
@@ -171,14 +170,13 @@ window.addEventListener('resize', function() {
 
     // 画面の向きを取得
     let angle = screen && screen.orientation && screen.orientation.angle;
-    let windowWidth = $(window).width();
 
     if ( angle === undefined ) {
       angle = window.orientation; // iOS用
     }
 
-    // スマホ画面縦持ち
-    if (windowWidth <= 767 && angle === 0 && deviceType !== 'portrait') {
+    // スマホ、タブレット画面縦持ち
+    if (angle === 0 && deviceType !== 'portrait') {
       spotList.map(function (spot) {
         const spPosition = JSON.parse(spot.spPosition);
         spot.infospot.scale.x /= 2;
@@ -187,7 +185,7 @@ window.addEventListener('resize', function() {
       });
 
       deviceType = 'portrait';
-    } else if (windowWidth <= 767 && angle !== 0 && deviceType === 'portrait') {
+    } else if (angle !== 0 && deviceType === 'portrait') {
       spotList.map(function (spot) {
 
         const pcPosition = JSON.parse(spot.pcPosition);
