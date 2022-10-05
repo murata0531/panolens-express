@@ -15,7 +15,7 @@ spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, info
 spotList.push({ id: 6, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: '../testtitle.png', panoramaSrc: null, spScale: 400, pcScale: 800, spPosition: '{"x":-100, "y":1500, "z":-5000}', pcPosition: '{"x":-100, "y":2200, "z":-5000}', type: 'title', isHover: false });
 
 let panoramaList = [];
-panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4', startTime: 5, endTime: 60 });
+panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4', startTime: 5, endTime: 60, totalTime: null });
 panoramaList.push({ id: 2, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 panoramaList.push({ id: 3, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 panoramaList.push({ id: 4, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
@@ -76,7 +76,7 @@ window.onload = function() {
     // パノラマ一覧データのパノラマオブジェクトを設定
     panoramaList.map(function (panorama) {
       if (panorama.type === 'video') {
-        panorama.panorama = new PANOLENS.VideoPanorama(panorama.panoramaSrc);
+        panorama.panorama = new PANOLENS.VideoPanorama(panorama.panoramaSrc, {muted: false});
       } else if (panorama.type === 'image') {
         panorama.panorama = new PANOLENS.ImagePanorama(panorama.panoramaSrc);
       }
@@ -120,6 +120,8 @@ window.onload = function() {
           currentPanorama = nextPanorama[0];
 
           if (currentPanorama['type'] === 'video') {
+            let canvasArea = $('#container').find('div').eq(1);
+            canvasArea.append(`<span>00:02　/　00:26</span>`);
             timeAction(currentPanorama, nextSpot);
           }
         });
