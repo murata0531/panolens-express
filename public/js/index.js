@@ -37,6 +37,22 @@ window.onload = function() {
     currentPanorama['panorama'].toggleInfospotVisibility(true);
   });
   
+  // 再生時間の表記を「mm:ss」に整える
+  const convertTime = function(currentTime) {
+    
+    currentTime = Math.floor(currentTime);
+    var res = null;
+
+    if( 60 <= currentTime ) {
+      res = Math.floor(currentTime / 60);
+      res += ":" + Math.floor(currentTime % 60).toString().padStart( 2, '0');
+    } else {
+      res = "0:" + Math.floor(currentTime % 60).toString().padStart( 2, '0');
+    }
+
+    return res;
+  };
+
   // ビデオの再生位置が5秒以上60秒以内ならボタンやタイトルテキストなどのオブジェクトを表示
   function timeAction(panorama, spotList) {
 
@@ -46,6 +62,11 @@ window.onload = function() {
     panoramaVideo = panoramaObj.getVideoElement();
 
     panoramaVideo.addEventListener("timeupdate", function() {
+
+      const timePosition = convertTime(panoramaVideo.currentTime);
+      const timeDuration = convertTime(panoramaVideo.duration);
+      // currentTime">00:02　/　00:26</span>
+      $('#currentTime').text(timePosition + " / " + timeDuration);
       if (panoramaVideo.currentTime >= startTime && panoramaVideo.currentTime <= endTime && isModalOpen === false) {
 
         spotList.map(function(spot) {
@@ -85,7 +106,8 @@ window.onload = function() {
     //パノラマ上に配置するオブジェクト
     spotList.map(function (spot) {
 
-      // スマホ、タブレット画面縦持ち
+      // スマホ、タブレット画面縦持ち => portrait
+      // タブレット横持ち、pc => landscape
       if (angle === 0) {
         spot.infospot = new PANOLENS.Infospot(spot.spScale, spot.infoSrc, spot.isHover);
         const spPosition = JSON.parse(spot.spPosition);
@@ -120,9 +142,12 @@ window.onload = function() {
           currentPanorama = nextPanorama[0];
 
           if (currentPanorama['type'] === 'video') {
-            let canvasArea = $('#container').find('div').eq(1);
-            canvasArea.append(`<span>00:02　/　00:26</span>`);
             timeAction(currentPanorama, nextSpot);
+            $('#timeArea').show();
+            $('#currentTime').show();
+          } else {
+            $('#timeArea').hide();
+            $('#currentTime').hide();
           }
         });
       } else if (spot.type === 'information') {
@@ -138,6 +163,9 @@ window.onload = function() {
           $('#modalArea').fadeIn();
         });
       }
+
+      // spot.infospot.rotation.x = 100;
+      console.log(spot.infospot);
     });
 
     //ビデオとオブジェクトを配置
@@ -160,6 +188,39 @@ window.onload = function() {
         viewer.add(obj.panorama);
       }
     )
+
+    if (currentPanorama['type'] === 'video') {
+      let canvasArea = $('#container').find('div').eq(1);
+      let timeArea = canvasArea.find('span').eq(-1);
+      timeArea.attr('id', 'timeArea');
+      timeArea.insertBefore($('#container').find('div').eq(0));
+      timeArea.find('div').eq(0).css('background-color','rgba(15,85,241,.9)');
+      timeArea.find('div').eq(1).css('background-color','rgba(15,85,241,.9)');
+      timeArea.css({
+        'position': 'fixed',
+        'bottom': '44px',
+        'width': '100%'
+      })
+
+      canvasArea.append(`<span id="currentTime">0:00 / 0:00</span>`);
+
+      $('#currentTime').css({
+        'cursor': 'pointer',
+        'float': 'left',
+        'width': '100px',
+        'height': '50%',
+        'color': 'white',
+        'font-size': '12px',
+        'position': 'relative',
+        'top': '30%',
+        'left': '10px'
+      });
+    }
+
+    // let ua = navigator.userAgent;
+    // if (ua.indexOf('iPhone') > 0 || ua.indexOf('Android') > 0 || ua.indexOf('iPad') > 0) {
+    //   viewer.toggleNextControl();
+    // }
 
     timeAction(currentPanorama, firstSpot);
     
@@ -208,6 +269,11 @@ window.addEventListener('resize', function() {
       
       deviceType = 'landscape';
     }
+
+    // let ua = navigator.userAgent;
+    // if (ua.indexOf('iPhone') > 0 || ua.indexOf('Android') > 0 || ua.indexOf('iPad') > 0) {
+    //   viewer.toggleNextControl();
+    // }
   }, 10);
 });
 
