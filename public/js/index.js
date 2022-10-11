@@ -1,31 +1,68 @@
-let currentPanorama, panoramaVideo;
+let currentPanorama;
+let announceAudio;
 let infospot, infospot2, infospot3, infospot4,titlespot
 let viewer, container;
 let isModalOpen = false;
+let isAudioPlaying = false;
 let deviceType;
+let spotList,panoramaList;
 
-let spotList = [];
+// let spotList = [];
 
 // パノラマを変更するボタンやタイトルなどのテストデータ。本番ではredisなどのjsonとして管理する
-spotList.push({ id: 1, panoramaId: 1, nextPanoramaId: 2, infospot: null, infoSrc: '../chartest.png', spScale: 750, pcScale: 1500, spPosition: '{"x":750, "y":500, "z":-5000}', pcPosition: '{"x":1500, "y":500, "z":-5000}', type: 'videoPanorama', isHover: false });
-spotList.push({ id: 2, panoramaId: 1, nextPanoramaId: 3, infospot: null, infoSrc: '../chartest2.png', spScale: 750, pcScale: 1500, spPosition: '{"x":-750, "y":500, "z":-5000}', pcPosition: '{"x":-2000, "y":500, "z":-5000}', type: 'imagePanorama', isHover: true });
-spotList.push({ id: 3, panoramaId: 1, nextPanoramaId: 4, infospot: null, infoSrc: '../chartest3.png', spScale: 750, pcScale: 1500, spPosition: '{"x":750, "y":-1000, "z":-5000}', pcPosition: '{"x":1500, "y":-1500, "z":-5000}', type: 'imagePanorama', isHover: true });
-spotList.push({ id: 4, panoramaId: 1, nextPanoramaId: 1, infospot: null, infoSrc: '../chartest4.png', spScale: 750, pcScale: 1500, spPosition: '{"x":-750, "y":-1000, "z":-5000}', pcPosition: '{"x":-2000, "y":-1500, "z":-5000}', type: 'imagePanorama', isHover: true });
-spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{"x":-100, "y":-500, "z":-5000}', pcPosition: '{"x":-100, "y":-500, "z":-5000}', type: 'information', isHover: true });
-spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{"x":-500, "y":-500, "z":-5000}', pcPosition: '{"x":-100, "y":-500, "z":-5000}', type: 'announce', isHover: true });
-spotList.push({ id: 6, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: '../testtitle.png', panoramaSrc: null, spScale: 400, pcScale: 800, spPosition: '{"x":-100, "y":1500, "z":-5000}', pcPosition: '{"x":-100, "y":2200, "z":-5000}', type: 'title', isHover: false });
+// spotList.push({ id: 1, panoramaId: 1, nextPanoramaId: 2, infospot: null, infoSrc: '../chartest.png', spScale: 750, pcScale: 1500, spPosition: '{"x":750, "y":500, "z":-5000}', pcPosition: '{"x":1500, "y":500, "z":-5000}', type: 'videoPanorama', isHover: false });
+// spotList.push({ id: 2, panoramaId: 1, nextPanoramaId: 3, infospot: null, infoSrc: '../chartest2.png', spScale: 750, pcScale: 1500, spPosition: '{"x":-750, "y":500, "z":-5000}', pcPosition: '{"x":-2000, "y":500, "z":-5000}', type: 'imagePanorama', isHover: true });
+// spotList.push({ id: 3, panoramaId: 1, nextPanoramaId: 4, infospot: null, infoSrc: '../chartest3.png', spScale: 750, pcScale: 1500, spPosition: '{"x":750, "y":-1000, "z":-5000}', pcPosition: '{"x":1500, "y":-1500, "z":-5000}', type: 'imagePanorama', isHover: true });
+// spotList.push({ id: 4, panoramaId: 1, nextPanoramaId: 1, infospot: null, infoSrc: '../chartest4.png', spScale: 750, pcScale: 1500, spPosition: '{"x":-750, "y":-1000, "z":-5000}', pcPosition: '{"x":-2000, "y":-1500, "z":-5000}', type: 'imagePanorama', isHover: true });
+// spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{"x":-100, "y":-500, "z":-5000}', pcPosition: '{"x":-100, "y":-500, "z":-5000}', type: 'information', isHover: true });
+// spotList.push({ id: 5, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: PANOLENS.DataImage.Info, spScale: 250, pcScale: 500, spPosition: '{"x":-500, "y":-500, "z":-5000}', pcPosition: '{"x":-100, "y":-500, "z":-5000}', type: 'announce', announceSrc: '../test_announce.mp3', isHover: true });
+// spotList.push({ id: 6, panoramaId: 1, nextPanoramaId: null, infospot: null, infoSrc: '../testtitle.png', panoramaSrc: null, spScale: 400, pcScale: 800, spPosition: '{"x":-100, "y":1500, "z":-5000}', pcPosition: '{"x":-100, "y":2200, "z":-5000}', type: 'title', isHover: false });
 
-let panoramaList = [];
-panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4', startTime: 5, endTime: 60, totalTime: null });
-panoramaList.push({ id: 2, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
-panoramaList.push({ id: 3, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
-panoramaList.push({ id: 4, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
+// let panoramaList = [];
+// panoramaList.push({ id: 1, panorama: null, type: 'video', panoramaSrc: '../test.mp4', startTime: 5, endTime: 60, totalTime: null });
+// panoramaList.push({ id: 2, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
+// panoramaList.push({ id: 3, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
+// panoramaList.push({ id: 4, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
+
+// jsonデータ読み取り
+$.ajax({
+  type: "GET",
+  url: "./js/spotList.json",
+  dataType: "json",
+  async: false
+}).then(
+  function (json) {
+    let data_stringify = JSON.stringify(json);
+    let data_json = JSON.parse(data_stringify);
+    spotList = data_json;
+  },
+  function () {
+    console.log("spotList.jsonの読み込みに失敗しました");
+  }
+);
+$.ajax({
+  type: "GET",
+  url: "./js/panoramaList.json",
+  dataType: "json",
+  async: false
+}).then(
+  function (json) {
+    let data_stringify = JSON.stringify(json);
+    let data_json = JSON.parse(data_stringify);
+    panoramaList = data_json;
+  },
+  function () {
+    console.log("panoramaList.jsonの読み込みに失敗しました");
+  }
+);
 
 // ユーザが動画停止ボタンを押したかモーダル表示で停止されたかを判別
 let userPaused = true;
 
 $(window).on("load", function() {
+
   container = document.querySelector('#container');
+  announceAudio = $('#announceAudio').get(0);
   const dialog = document.querySelector("#modalDialog");
 
   initSpot();
@@ -38,6 +75,15 @@ $(window).on("load", function() {
     } else {
       $('#volumeBtn').css('background-image', 'url(https://cdn.sove-x.com/player/images/sound_on.png)');
       currentPanorama['panorama'].muteVideo();
+    }
+  });
+
+  $('#announceAudio').on("ended", function() {
+
+    if (currentPanorama['type'] === 'video') {
+      let panoramaVideo = currentPanorama['panorama'].getVideoElement();
+      panoramaVideo.volume = 1;
+      isAudioPlaying = false;
     }
   });
 
@@ -71,7 +117,7 @@ $(window).on("load", function() {
     const panoramaObj = panorama['panorama'];
     const startTime = Number(panorama['startTime']);
     const endTime = Number(panorama['endTime']);
-    panoramaVideo = panoramaObj.getVideoElement();
+    let panoramaVideo = panoramaObj.getVideoElement();
 
     panoramaVideo.addEventListener("timeupdate", function() {
 
@@ -96,6 +142,19 @@ $(window).on("load", function() {
     });
   }
 
+  // ビデオのボリュームを下げアナウンスを流す
+  function volumeControll(panorama) {
+    let panoramaVideo = panorama.getVideoElement();
+    isAudioPlaying = !isAudioPlaying;
+    if (isAudioPlaying) {
+      announceAudio.play();
+      panoramaVideo.volume = 0.3;
+    } else {
+      announceAudio.pause();
+      panoramaVideo.volume = 1;
+    }
+  }
+
   // 初期ロード時にスマホの縦・横・pcでオブジェクトの大きさと配置を変える
   function initSpot() {
     
@@ -118,15 +177,23 @@ $(window).on("load", function() {
     //パノラマ上に配置するオブジェクト
     spotList.map(function (spot) {
 
+      let infoSrc = '';
+
+      if (spot.type === 'information' || spot.type === 'announce') {
+        infoSrc = (new Function("return " + spot.infoSrc))();
+      } else {
+        infoSrc = spot.infoSrc;
+      }
+      
       // スマホ、タブレット画面縦持ち => portrait
       // タブレット横持ち、pc => landscape
       if (angle === 0) {
-        spot.infospot = new PANOLENS.Infospot(spot.spScale, spot.infoSrc, spot.isHover);
+        spot.infospot = new PANOLENS.Infospot(spot.spScale, infoSrc, spot.isHover);
         const spPosition = JSON.parse(spot.spPosition);
         spot.infospot.position.set(spPosition.x, spPosition.y, spPosition.z);
         deviceType = 'portrait';
       } else {
-        spot.infospot = new PANOLENS.Infospot(spot.pcScale, spot.infoSrc, spot.isHover);
+        spot.infospot = new PANOLENS.Infospot(spot.pcScale, infoSrc, spot.isHover);
         const pcPosition = JSON.parse(spot.pcPosition);
         spot.infospot.position.set(pcPosition.x, pcPosition.y, pcPosition.z);
         deviceType = 'landscape';
@@ -153,13 +220,18 @@ $(window).on("load", function() {
 
           currentPanorama = nextPanorama[0];
 
+          if (announceAudio.src) {
+            announceAudio.src = '';
+          }
           if (currentPanorama['type'] === 'video') {
             timeAction(currentPanorama, nextSpot);
             $('#timeArea').show();
             $('#currentTime').show();
+            $('#volumeBtn').show();
           } else {
             $('#timeArea').hide();
             $('#currentTime').hide();
+            $('#volumeBtn').hide();
           }
         });
       } else if (spot.type === 'information') {
@@ -174,10 +246,13 @@ $(window).on("load", function() {
           // dialog['show']();
           $('#modalArea').fadeIn();
         });
+      } else if (spot.type === 'announce') {
+        spot.infospot.addEventListener('click', function() {
+          if(currentPanorama['type'] === 'video') {
+            volumeControll(currentPanorama['panorama'], spot.announceSrc);
+          }
+        });
       }
-
-      // spot.infospot.rotation.x = 100;
-      console.log(spot.infospot);
     });
 
     //ビデオとオブジェクトを配置
@@ -201,6 +276,16 @@ $(window).on("load", function() {
       }
     )
 
+    const audioSpot = $.grep(firstSpot,
+      function (obj, index) {
+        if (obj.type === 'announce') {
+          return obj;
+        }
+      }
+    )
+    
+    announceAudio.src = audioSpot[0].announceSrc;
+    
     $.grep(panoramaList,
       function (obj, index) {
         viewer.add(obj.panorama);
