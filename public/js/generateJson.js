@@ -26,5 +26,5 @@ const createFile = (pathName, source) => {
   });
 };
 
-createFile('./public/js/spotList.json', spotList);
-createFile('./public/js/panoramaList.json', panoramaList);
+createFile('./public/json/1/spotList.json', spotList);
+createFile('./public/json/1/panoramaList.json', panoramaList);
