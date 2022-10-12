@@ -24,50 +24,29 @@ let spotList,panoramaList;
 // panoramaList.push({ id: 3, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 // panoramaList.push({ id: 4, panorama: null, type: 'image', panoramaSrc: 'https://pchen66.github.io/Panolens/examples/asset/textures/equirectangular/sunset.jpg' });
 
-// jsonデータ読み取り
-$.ajax({
-  type: "GET",
-  url: "./js/spotList.json",
-  dataType: "json",
-  async: false
-}).then(
-  function (json) {
-    let data_stringify = JSON.stringify(json);
-    let data_json = JSON.parse(data_stringify);
-    spotList = data_json;
-  },
-  function () {
-    console.log("spotList.jsonの読み込みに失敗しました");
-  }
-);
-$.ajax({
-  type: "GET",
-  url: "./js/panoramaList.json",
-  dataType: "json",
-  async: false
-}).then(
-  function (json) {
-    let data_stringify = JSON.stringify(json);
-    let data_json = JSON.parse(data_stringify);
-    panoramaList = data_json;
-  },
-  function () {
-    console.log("panoramaList.jsonの読み込みに失敗しました");
-  }
-);
-
 // ユーザが動画停止ボタンを押したかモーダル表示で停止されたかを判別
 let userPaused = true;
 
 $(window).on("load", function() {
 
+  // jsonデータ読み取り
+  $.ajax({
+    type: "POST",
+      url: "getJson.php",
+      data:{ id:1 },
+      dataType:'json'
+  }).fail(function(){
+    console.log('error');
+  }).done(function(result){
+    spotList = result["spotList"];
+    panoramaList = result["panoramaList"];
+    initSpot();
+  });
+
   container = document.querySelector('#container');
   announceAudio = $('#announceAudio').get(0);
-  const dialog = document.querySelector("#modalDialog");
 
-  initSpot();
-
-  $('#volumeBtn').click(function() {
+  $(document).on('touchend click','#volumeBtn', function() {
 
     if(currentPanorama['panorama'].isVideoMuted()) {
       $('#volumeBtn').css('background-image', 'url(https://cdn.sove-x.com/player/images/sound_off.png)');      
@@ -78,7 +57,7 @@ $(window).on("load", function() {
     }
   });
 
-  $('#announceAudio').on("ended", function() {
+  $(document).on("ended", '#announceAudio', function() {
 
     if (currentPanorama['type'] === 'video') {
       let panoramaVideo = currentPanorama['panorama'].getVideoElement();
@@ -87,8 +66,7 @@ $(window).on("load", function() {
     }
   });
 
-  $('#closeModal , #modalBg').click(function()　{
-    // dialog['close']();
+  $(document).on('click', '#closeModal , #modalBg', function()　{
     $('#modalArea').fadeOut();
     isModalOpen = false;
     if (userPaused !== true) { currentPanorama['panorama'].playVideo(); }
@@ -243,7 +221,6 @@ $(window).on("load", function() {
           isModalOpen = true;
           userPaused = currentPanorama['panorama'].isVideoPaused();
           currentPanorama['panorama'].pauseVideo();
-          // dialog['show']();
           $('#modalArea').fadeIn();
         });
       } else if (spot.type === 'announce') {
